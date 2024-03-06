@@ -84,7 +84,7 @@ function App() {
               <ul>
                 {selectedProduct.bids.map((bid, i) => (
                   <li key={i}>
-                    {bid.amount} - {bid.bidder}
+                    {bid.amount} - {bid.bidder} - {bid.placed.toString()}
                   </li>
                 ))}
               </ul>

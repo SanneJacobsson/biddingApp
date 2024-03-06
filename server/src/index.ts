@@ -14,9 +14,11 @@ let products: Product[] = [
     highestBid: 0,
     highestBidder: "",
     bids: [
-      { amount: 100, productId: "abc123", bidder: "Kalle" },
-      { amount: 200, productId: "abc123", bidder: "Pelle" },
+      { amount: 100, productId: "abc123", bidder: "Kalle", placed: new Date() },
+      { amount: 200, productId: "abc123", bidder: "Pelle", placed: new Date() },
     ],
+    endDate: "",
+    acceptedPrice: 50,
   },
   {
     id: "qwe321",
@@ -26,6 +28,8 @@ let products: Product[] = [
     highestBid: 0,
     highestBidder: "",
     bids: [],
+    endDate: "",
+    acceptedPrice: 50,
   },
 ];
 

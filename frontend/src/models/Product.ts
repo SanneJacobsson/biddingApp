@@ -8,4 +8,6 @@ export type Product = {
   highestBid: number;
   highestBidder: string;
   bids: Bid[];
+  endDate: string;
+  acceptedPrice: number;
 };

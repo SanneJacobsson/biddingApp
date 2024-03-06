@@ -1,6 +1,7 @@
 //lägg datum och tid när varje annons slutar
 
 Lägg till datum som en egenskap i objektet produkt
+Kunna se en countdown när man är inne på en specifik produkt
 
 //vem som har högsta budet
 
