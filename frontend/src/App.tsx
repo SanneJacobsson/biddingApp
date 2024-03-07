@@ -22,6 +22,10 @@ function App() {
     s.on("bid_accepted", (product: Product) => {
       setSelectedProduct(product);
     });
+    s.on("end_sale", (products: Product[]) => {
+      setProducts(products);
+      console.log(products);
+    });
 
     setSocket(s);
   }, [setSocket, socket]);

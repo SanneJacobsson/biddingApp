@@ -10,4 +10,5 @@ export type Product = {
   bids: Bid[];
   endDate: string;
   acceptedPrice: number;
+  isSold: boolean;
 };
