@@ -20,6 +20,7 @@ let products: Product[] = [
     endDate: "2024-03-10 14:00:00",
     acceptedPrice: 2000,
     isSold: false,
+    isDeactivated: false,
   },
   {
     id: "qwe321",
@@ -29,9 +30,23 @@ let products: Product[] = [
     highestBid: 0,
     highestBidder: "",
     bids: [],
-    endDate: "2024-03-07 14:06:00",
+    endDate: "2024-03-07 20:38:00",
     acceptedPrice: 80000,
     isSold: false,
+    isDeactivated: false,
+  },
+  {
+    id: "new321",
+    name: "Moped",
+    description: "A very nice moped",
+    price: 3000,
+    highestBid: 0,
+    highestBidder: "",
+    bids: [],
+    endDate: "2024-03-07 20:38:00",
+    acceptedPrice: 10000,
+    isSold: false,
+    isDeactivated: false,
   },
 ];
 
@@ -52,12 +67,45 @@ io.on("connection", (socket) => {
 
   socket.emit(
     "product_list",
-    // products.map((p) => {
-    //   return { id: p.id, name: p.name, endDate: p.endDate };
-    // })
     products.filter((p) => {
-      if (p.isSold === false) {
-        return { id: p.id, name: p.name, endDate: p.endDate };
+      if (
+        new Date().toLocaleString() > p.endDate &&
+        p.bids.length !== 0 &&
+        p.acceptedPrice < p.bids[0].amount
+      ) {
+        p.isSold = true;
+        p.isDeactivated = true;
+        return {
+          id: p.id,
+          name: p.name,
+          endDate: p.endDate,
+          isSold: p.isSold,
+          isDeactivated: p.isDeactivated,
+        };
+      } else {
+        if (
+          new Date().toLocaleString() > p.endDate &&
+          p.bids.length !== 0 &&
+          p.acceptedPrice > p.bids[0].amount
+        ) {
+          p.isSold = false;
+          p.isDeactivated = true;
+          console.log(products);
+          return {
+            id: p.id,
+            name: p.name,
+            endDate: p.endDate,
+            isDeactivated: p.isDeactivated,
+          };
+        } else {
+          if (new Date().toLocaleString() < p.endDate) {
+            p.isSold = false;
+            if (p.isSold === false) {
+              return { id: p.id, name: p.name, endDate: p.endDate };
+            }
+            console.log(products);
+          }
+        }
       }
     })
   );
@@ -108,23 +156,6 @@ io.on("connection", (socket) => {
         console.log("budet är för lågt");
       }
     }
-  });
-  socket.emit("end_sale", products, () => {
-    products.forEach((p) => {
-      if (p.bids.length !== 0) {
-        const maxbid = p?.bids.reduce(function (bid, newbid) {
-          return bid && bid.amount > newbid.amount ? bid : newbid;
-        });
-        if (Date.now().toLocaleString() < p.endDate) {
-          return products;
-        } else {
-          if (p.acceptedPrice < maxbid.amount) {
-            p.isSold = true;
-          }
-        }
-      }
-    });
-    return products;
   });
 });
 
