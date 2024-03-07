@@ -49,6 +49,7 @@ function App() {
       amount: currentBid,
       productId: selectedProduct?.id,
       bidder: userName,
+      placed: new Date().toLocaleString(),
     });
   };
 
@@ -84,7 +85,7 @@ function App() {
               <ul>
                 {selectedProduct.bids.map((bid, i) => (
                   <li key={i}>
-                    {bid.amount} - {bid.bidder} - {bid.placed.toString()}
+                    {bid.amount} - {bid.bidder} - {bid.placed}
                   </li>
                 ))}
               </ul>

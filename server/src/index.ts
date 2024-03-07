@@ -14,8 +14,8 @@ let products: Product[] = [
     highestBid: 0,
     highestBidder: "",
     bids: [
-      { amount: 100, productId: "abc123", bidder: "Kalle", placed: new Date() },
-      { amount: 200, productId: "abc123", bidder: "Pelle", placed: new Date() },
+      { amount: 100, productId: "abc123", bidder: "Kalle", placed: new Date().toLocaleString() },
+      { amount: 200, productId: "abc123", bidder: "Pelle", placed: new Date().toLocaleString() },
     ],
     endDate: "",
     acceptedPrice: 50,
