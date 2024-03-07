@@ -29,7 +29,7 @@ let products: Product[] = [
     highestBid: 0,
     highestBidder: "",
     bids: [],
-    endDate: "2024-03-07 14:06:00",
+    endDate: "2024-03-07 14:25:00",
     acceptedPrice: 80000,
     isSold: false,
   },
@@ -109,22 +109,22 @@ io.on("connection", (socket) => {
       }
     }
   });
-  socket.emit("end_sale", products, () => {
+  io.emit("end_sale", products, () => {
     products.forEach((p) => {
       if (p.bids.length !== 0) {
         const maxbid = p?.bids.reduce(function (bid, newbid) {
           return bid && bid.amount > newbid.amount ? bid : newbid;
         });
         if (Date.now().toLocaleString() < p.endDate) {
-          return products;
+          console.log("lalala");
         } else {
           if (p.acceptedPrice < maxbid.amount) {
             p.isSold = true;
           }
         }
       }
+      return products;
     });
-    return products;
   });
 });
 
