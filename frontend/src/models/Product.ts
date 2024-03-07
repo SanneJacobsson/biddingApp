@@ -11,4 +11,5 @@ export type Product = {
   endDate: string;
   acceptedPrice: number;
   isSold: boolean;
+  isDeactivated: boolean;
 };

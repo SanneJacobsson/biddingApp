@@ -9,6 +9,10 @@ function App() {
   const [selectedProduct, setSelectedProduct] = useState<Product>();
   const [userName, setUserName] = useState("");
   const [currentBid, setCurrentBid] = useState(0);
+  const [current, setCurrent] = useState("PÅGÅENDE");
+  const [sold, setSold] = useState("AVSLUTAD & SÅLD");
+  const [noSaleFinish, setNoSaleFinish] = useState("AVSLUTAD & EJ SÅLD");
+  const [buttonDisabled, setButtonDisabled] = useState(false);
 
   useEffect(() => {
     if (socket) return;
@@ -21,10 +25,6 @@ function App() {
 
     s.on("bid_accepted", (product: Product) => {
       setSelectedProduct(product);
-    });
-    s.on("end_sale", (products: Product[]) => {
-      setProducts(products);
-      console.log(products);
     });
 
     setSocket(s);
@@ -41,10 +41,30 @@ function App() {
   //   });
   // };
 
-  const handleClick = (id: string) => {
+  const handleClick = (
+    id: string,
+    isSold: boolean,
+    isDeactivated: boolean,
+    products: Product[]
+  ) => {
     socket?.emit("join_room", id, (product: Product) => {
       console.log("Joined room: ", product);
       setSelectedProduct(product);
+      const disableSold = products.find((p) => p.isSold === isSold);
+      const disableDeactivated = products.find(
+        (p) => p.isDeactivated === isDeactivated
+      );
+
+      if (disableSold?.isSold === true) {
+        setButtonDisabled(true);
+        console.log("knappen är ej i funktion", buttonDisabled);
+      } else {
+        if (disableDeactivated?.isDeactivated === true) {
+          setButtonDisabled(true);
+        } else {
+          setButtonDisabled(false);
+        }
+      }
     });
   };
 
@@ -63,10 +83,20 @@ function App() {
         <div
           key={product.id}
           onClick={() => {
-            handleClick(product.id);
+            handleClick(
+              product.id,
+              product.isSold,
+              product.isDeactivated,
+              products
+            );
           }}
         >
-          {product.name} - {product.endDate}
+          {product.name} - {product.endDate} -
+          {product.isSold
+            ? sold
+            : product.isDeactivated
+            ? noSaleFinish
+            : current}
         </div>
       ))}
 
@@ -82,7 +112,9 @@ function App() {
             value={currentBid}
             onChange={(e) => setCurrentBid(+e.target.value)}
           />
-          <button onClick={makeBid}>Lägg bud</button>
+          <button onClick={makeBid} disabled={buttonDisabled}>
+            Lägg bud
+          </button>
           <section>
             <div>
               <h3>{selectedProduct.name}</h3>
