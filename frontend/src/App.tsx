@@ -62,7 +62,7 @@ function App() {
             handleClick(product.id);
           }}
         >
-          {product.name}
+          {product.name} - {product.endDate}
         </div>
       ))}
 

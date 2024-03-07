@@ -1,6 +1,6 @@
-//lägg datum och tid när varje annons slutar
+//lägg datum och tid när varje annons slutar - checked
 
-Lägg till datum som en egenskap i objektet produkt
+Lägg till datum som en egenskap i objektet produkt - checked
 Kunna se en countdown när man är inne på en specifik produkt
 
 //vem som har högsta budet

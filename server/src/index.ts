@@ -17,7 +17,7 @@ let products: Product[] = [
       { amount: 100, productId: "abc123", bidder: "Kalle", placed: new Date().toLocaleString() },
       { amount: 200, productId: "abc123", bidder: "Pelle", placed: new Date().toLocaleString() },
     ],
-    endDate: "",
+    endDate: "2024-03-10 14:00:00",
     acceptedPrice: 50,
   },
   {
@@ -28,7 +28,7 @@ let products: Product[] = [
     highestBid: 0,
     highestBidder: "",
     bids: [],
-    endDate: "",
+    endDate: "2024-03-15 14:00:00",
     acceptedPrice: 50,
   },
 ];
@@ -51,7 +51,7 @@ io.on("connection", (socket) => {
   socket.emit(
     "product_list",
     products.map((p) => {
-      return { id: p.id, name: p.name };
+      return { id: p.id, name: p.name, endDate: p.endDate };
     })
   );
 
@@ -70,16 +70,29 @@ io.on("connection", (socket) => {
   });
 
   // Callback är den funktion som skickas med i händelsen från klienten
-  socket.on("make_bid", (bid: Bid) => {
-    console.log(bid);
+  socket.on("make_bid", (newbid: Bid) => {
+    console.log(newbid);
 
-    const product = products.find((p) => p.id === bid.productId);
-    product?.bids.push(bid);
+    const product = products.find((p) => p.id === newbid.productId);
+    const max= product?.bids.reduce(function(bid,newbid){
+      return (bid && bid.amount > newbid.amount)? bid:newbid
+    })
+    if(max){
+    
+      if(max.amount >= newbid.amount){
+        console.log("budet är för lågt");
+        
+      }
+      else{
+      product?.bids.unshift(newbid);
+      io.to(newbid.productId).emit(
+        "bid_accepted",
+        products.find((p) => p.id === newbid.productId)
+      );
+      }
+    }
 
-    io.to(bid.productId).emit(
-      "bid_accepted",
-      products.find((p) => p.id === bid.productId)
-    );
+    
   });
 });
 
